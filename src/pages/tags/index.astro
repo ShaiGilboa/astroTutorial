@@ -1,0 +1,25 @@
+---
+import type { MarkdownInstance } from "astro";
+import BlogLink from "../../components/BlogLink.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+const allPosts: MarkdownInstance<Record<string, any>>[] =
+  await Astro.glob("../posts/*.md");
+const allTags = allPosts.reduce((tags, post) => {
+  return [...new Set([...tags, ...post.frontmatter.tags])];
+}, [] as string[]);
+---
+
+<BaseLayout pageTitle={"tags"}>
+  <p>all Tags</p>
+  <ul>
+    {
+      allTags?.map(tag => {
+        return (
+          <li>
+            <BlogLink title={tag} url={`/tags/${tag}`} />
+          </li>
+        );
+      })
+    }
+  </ul>
+</BaseLayout>
