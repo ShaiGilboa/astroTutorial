@@ -15,20 +15,21 @@ export async function getStaticPaths() {
 
 const { tag } = Astro.params;
 const { allPosts } = Astro.props;
+const filteredPosts = allPosts.filter(post =>
+  post.frontmatter.tags?.includes(tag)
+);
 ---
 
 <BaseLayout pageTitle={tag}>
   <p>Posts tagged with {tag}</p>
   <ul>
     {
-      allPosts?.map(post => {
-        if (post.frontmatter.tags?.includes(tag)) {
-          return (
-            <li>
-              <BlogLink title={post.frontmatter.title} url={post.url} />
-            </li>
-          );
-        }
+      filteredPosts?.map(post => {
+        return (
+          <li>
+            <BlogLink title={post.frontmatter.title} url={post.url} />
+          </li>
+        );
       })
     }
   </ul>
