@@ -1,10 +1,25 @@
 ---
-
+import type { MarkdownInstance } from "astro";
+const pages = await Astro.glob("../pages/*.astro");
+const pagesIndex = await Astro.glob("../pages/*/index.astro");
+const pagesArr = [...pages, ...pagesIndex]
+  .map(page => {
+    const url = page.url;
+    const label = url?.split("/")?.[1];
+    return {
+      url,
+      label: label || "",
+    };
+  })
+  .filter(page => page.label)
+  .sort((pageA, pageB) => pageA.label.localeCompare(pageB.label));
 ---
 
 <div class='nav-links'>
   <a href='/'>Home</a>
-  <a href='/about/'>About</a>
-  <a href='/blog/'>Blog</a>
-  <a href='/tags/'>Tags</a>
+  {
+    pagesArr?.map(page => {
+      return <a href={page.url}>{page.label}</a>;
+    })
+  }
 </div>
